@@ -1,0 +1,35 @@
+<html>
+	<head>
+		{% if title %}
+		<title>{{ title }}</title>
+		{% else %}
+		<title>WordCloud</title>
+		{% endif %}
+	</head>
+	<body>
+		
+	<form name="main" action="" method="Post">
+		<label>Enter URL:</label>
+		<span><input type="text" size=80 name="urllink"></span><br>
+		<input type="submit" value="WordCloud">
+	</form>
+
+		<hr>
+		
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		<ul>
+			{% for message in messages %}
+				<li>{{ message }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+		{% endwith %}
+
+	{% include 'wordcloud.html' %}		
+
+
+	</body>
+</html>
+
+
