@@ -10,13 +10,11 @@ app.secret_key = 'You will never guess'
 @app.route('/index', methods = ['GET','POST'])
 def index():
 	if request.method == 'POST':
-		
+
 		url = request.form['urllink']
 		area = request.form['textarea']
 		case = request.form['case']
 		show_freq = request.form['show_freq']
-		freq = request.form['freq']
-
 		try:
 			if not url.startswith("http"):
 				url = "http://" + url
@@ -24,11 +22,13 @@ def index():
 		except:
 			flash("Cannot connect to the requested url")
 			return redirect(url_for('startover'))	
+		
 		soup = BeautifulSoup(htmltext)
 		article = ""
 		for text in soup.findAll(text=True):
 			article += text.encode("utf-8")
 		
+		freq = 50
 		a = getKeywords(article, case, freq)
 		random.shuffle(a)
 
@@ -41,19 +41,32 @@ def index():
 		k = 0
 		for index,item in enumerate(a):
 			index += 1
-			if show_freq == "yes":
-				span += '<a href=#><span class="word'+str(index)+'" id="tag'+str(index)+'">' + str(item[0]) + " (" + str(item[1]) + ") " + "</span></a>\n"
+			
+			if case == "upper":
+				tag = str(item[0]).upper()
 			else:
-				span += '<a href=#><span class="word'+str(index)+'" id="tag'+str(index)+'">' + str(item[0]) + "</span></a>\n"	
+				tag = str(item[0])
+
+			if show_freq == "yes":
+				span += '<a href=#><span class="word'+str(index)+'" id="tag'+str(index)+'">' + tag + " (" + str(item[1]) + ") " + "</span></a>\n"
+			else:
+				if len(item[0]) > 1:
+					span += '<a href=#><span class="word'+str(index)+'" id="tag'+str(index)+'">' + tag + "</span></a>\n"	
+			
+
+			''' Randomness in size'''
 			size = item[1]*item[1]*item[1]%400
-			if size < 50 and k%2 != 0:
+			if size < 50:
+				size += 250
+		 	if size > 50 and size < 100:
 				size += 150
-		 	if size > 50 and size < 100 and k%2 != 0:
-				size += 100
+			
 		 	css += '#tag'+str(index)+'{font-size: '+ str(size) +'%;color: '+colors[int(k%4)]+'}\n'
 		 	css += '#tag'+str(index)+':hover{color: red}\n'
 		 	k += 1
 
+		
+		 
 		f = open('templates/wordcloud.html', 'w')
 		message = """
 		<link rel='stylesheet' href='static/wordcloud.css'>
@@ -64,9 +77,11 @@ def index():
 		f.write(message)
 		f.close
 		
+		
 		f = open('static/wordcloud.css', 'w')
 		f.write(css)
 		f.close
+
 		return render_template('index.html')
 	startover()
 	return render_template('index.html')
@@ -75,12 +90,7 @@ def getKeywords(articletext, case, freq):
 	common = open("static/common_words.txt").read().split('\n')
 	word_dict = {}
 	
-	if case == "lower":
-		word_list = articletext.lower().split()
-	elif case == "upper":
-		word_list = articletext.upper().split()
-	else:
-		word_list = articletext.split()
+	word_list = articletext.lower().split()
 	
 	for word in word_list:
 		if word not in common and word.isalnum():
@@ -88,10 +98,11 @@ def getKeywords(articletext, case, freq):
 				word_dict[word] = 1
 			if word in word_dict:
 				word_dict[word] += 1
-	top_words =  sorted(word_dict.items(),key=lambda(k,v):(v,k),reverse=True)[0:int(freq)]
+	top_words =  sorted(word_dict.items(),key=lambda(k,v):(v,k),reverse=True)[0:freq]
 	top = []
 	for w in top_words:
 		top.append(w)
+
 	return top
 
 @app.route('/startover')
