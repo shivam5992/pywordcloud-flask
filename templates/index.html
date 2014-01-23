@@ -9,10 +9,43 @@
 	<body>
 		
 	<form name="main" action="" method="Post">
+		<a href="/startover">Startover</a>
 		<label>Enter URL:</label>
-		<span><input type="text" size=80 name="urllink"></span><br>
+		<span><input type="text" size=80 name="urllink" placeholder="ex. http://www.wikipedia.com"></span><br>
+		
+
+	#option 2: enter the text<br>
+	<textarea name="textarea" placeholder="enter your text artcile here">
+
+	</textarea><br>
+	#option 3: File Upload<br>
+	<input type="file" name="textfile"><br><br>
+
+	Frequency of Words: <input type="text" name="freq" size="10" value="50">
+
+	<h2>Menu:::::</h2>
+		<input type="radio" name="case" value="lower" CHECKED>LowerCase
+		<input type="radio" name="case" value="upper">UpperCase
+		<input type="radio" name="case" value="original">Original
+		
+	
+	<h2>Show Frequencies</h2>
+		<input type="radio" name="show_freq" value="yes">Yes
+		<input type="radio" name="show_freq" value="no" CHECKED>No
+	
+
+
+<br><br>
 		<input type="submit" value="WordCloud">
+
+
 	</form>
+
+
+
+
+
+
 
 		<hr>
 		
