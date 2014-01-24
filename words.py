@@ -13,6 +13,7 @@ Version: 0.1
 
 from flask import Flask, render_template, request, flash, redirect, url_for
 from BeautifulSoup import BeautifulSoup
+from threading import Thread
 import urllib
 import random
 
@@ -52,9 +53,12 @@ def index():
 		''' Get top keywords '''
 		freq = 50
 		a = getKeywords(article, case, freq)
+		
 		random.shuffle(a)
+		b = [x[1] for x in a]
+		minFreq = min(b)
 
-		''' Craete html span tags and corresponding css '''
+		''' Create html span tags and corresponding css '''
 		span = ""
 		css  = """#box{font-family:'calibri';max-height:1000px;max-width:1000px;border:2px solid black;}
 		#box a{text-decoration : none}
@@ -75,36 +79,41 @@ def index():
 			if show_freq == "yes":
 				span += '<a href=#><span class="word'+str(index)+'" id="tag'+str(index)+'">' + tag + " (" + str(item[1]) + ") " + "</span></a>\n"
 			else:
-				if len(item[0]) > 1:
-					span += '<a href=#><span class="word'+str(index)+'" id="tag'+str(index)+'">' + tag + "</span></a>\n"	
+				span += '<a href=#><span class="word'+str(index)+'" id="tag'+str(index)+'">' + tag + "</span></a>\n"	
 			
 			''' Create Randomness in sizes'''
-			size = item[1]*item[1]*item[1]%400
-			if size < 50:
-				size += 250
-		 	if size > 50 and size < 100:
-				size += 150
 			
+			freqTag = item[1]
+
+			fontMax = 120
+			fontMin = 100
+
+			if freqTag == minFreq:
+				size = fontMin
+			else:
+				size = freqTag * (fontMax - fontMin) + fontMin
+	
 		 	css += '#tag'+str(index)+'{font-size: '+ str(size) +'%;color: '+colors[int(k%colsize)]+'}\n'
 		 	css += '#tag'+str(index)+':hover{color: red}\n'
 		 	k += 1
-
 		
+
 		''' Write the HTML and CSS into seperate files ''' 
+		
+
 		f = open('templates/wordcloud.html', 'w')
 		message = """
-		<link rel='stylesheet' href='static/wordcloud.css'>
+		<style type="text/css">
+		""" + css +"""
+		</style>
 		<div id='box'>
 			""" + span +  """
 		</div>
 		"""
 		f.write(message)
 		f.close
+		f.flush()
 		
-		f = open('static/wordcloud.css', 'w')
-		f.write(css)
-		f.close
-
 		return render_template('index.html')
 
 	startover()
@@ -133,8 +142,14 @@ def getKeywords(articletext, case, freq):
 	top = []
 	for w in top_words:
 		top.append(w)
-
 	return top
+
+'''
+Thread Function to write text in HTML and CSS files
+'''
+def write():
+	print "Do Nothing"
+
 
 '''
 Function to reset everthing and startover
