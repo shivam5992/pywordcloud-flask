@@ -1,48 +1,87 @@
-<html>
-	<head>
-		<title>WordCloud | HTML</title>
-	</head>
-	
-	<body>
-	<form name="main" action="" method="Post">
-		
-		<a href="/startover">Startover</a>
-		<br>
-		<label>Enter URL:</label>
-		<span><input type="text" size=80 name="urllink" placeholder="ex. http://www.wikipedia.com"></span>
-		
-		<hr>
-		#option 2: enter the text :
-		<textarea name="textarea" placeholder="enter your text artcile here">
-		</textarea>
-		<hr>
-		<h2>Select Case:</h2>
-		<input type="radio" name="case" value="lower" CHECKED>LowerCase
-		<input type="radio" name="case" value="upper">UpperCase
-	
-		<h2>Show Frequencies</h2>
-		<input type="radio" name="show_freq" value="yes" CHECKED>Yes
-		<input type="radio" name="show_freq" value="no">No
-		<br>
-		
-		<input type="submit" value="WordCloud">
-	</form>
-	
-	<hr>
-		
-		{% with messages = get_flashed_messages() %}
-		{% if messages %}
-		<ul>
-			{% for message in messages %}
-				<li>{{ message }}</li>
-			{% endfor %}
-		</ul>
-		{% endif %}
-		{% endwith %}
+<!DOCTYPE html>
+<html lang="en">
 
-		{% include 'wordcloud.html' %}		
+<head>
+  
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+    <link href="static/css/landing-page.css" rel="stylesheet">
 
-	</body>
+</head>
+
+<body>
+
+   
+
+
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                
+                <a class="navbar-brand" href="http://startbootstrap.com">WordTagCloud</a>
+            </div>
+
+            <div class="collapse navbar-collapse navbar-right navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://www.github.com/shivam5992/wordcloud/" target="_blank">Code</a>
+                    </li>
+                    <li><a href="http://www.shivambansal.com" target="_blank">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+   
+     
+       <div class="container">
+            <h2><font color="#2a6496">WordTagCloud:</font> Create tag cloud from words</h2>
+            <br>
+            
+            <form name="main" action="/" method="Post">
+            
+            <table>
+                <tr>
+                    <td>Enter URL:</td>
+                    <td><input type="text" size=80 name="urllink" placeholder="Ex. http://www.wikipedia.com"></td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/startover">Reset And Start Over</a></td>
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+                    <td>Select Case:</td>
+                    <td><input type="radio" name="case" value="lower" CHECKED> LowerCase  &nbsp;&nbsp;  
+                        <input type="radio" name="case" value="upper">  UpperCase</td>
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+                    <td>Show Frequency: &nbsp;&nbsp;</td>
+                    <td><input type="radio" name="show_freq" value="yes" CHECKED> Yes &nbsp;&nbsp;
+                        <input type="radio" name="show_freq" value="no">  No</td>
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Create Word Tag Cloud"></td>
+            </table>
+            </form>
+
+<hr>
+
+{% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        {% include 'wordcloud.html' %}      
+      
+    <br><br><br>
+   <h4>Created and Developed by <a href="http://www.shivambansal.com" target="_blank">Shivam Bansal</a></h2>
+   	 </div>
+
+</body>
+
 </html>
-
-

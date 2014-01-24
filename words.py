@@ -31,7 +31,7 @@ def index():
 		
 		''' Store post variables '''
 		url = request.form['urllink']
-		area = request.form['textarea']
+		#area = request.form['textarea']
 		case = request.form['case']
 		show_freq = request.form['show_freq']
 		
@@ -60,7 +60,7 @@ def index():
 
 		''' Create html span tags and corresponding css '''
 		span = ""
-		css  = """#box{font-family:'calibri';max-height:1000px;max-width:1000px;border:2px solid black;}
+		css  = """#box{font-family:'calibri';border:2px solid black;}
 		#box a{text-decoration : none}
 		"""
 		
@@ -125,7 +125,7 @@ Function to get top keywords from an article
 def getKeywords(articletext, case, freq):
 
 	''' Ignoring the most common words from English Text '''
-	common = open("static/common_words.txt").read().split('\n')
+	common = open("static/assets/common_words.txt").read().split('\n')
 	
 	''' Create the dictionary for output response '''
 	word_dict = {}
@@ -157,9 +157,6 @@ Function to reset everthing and startover
 @app.route('/startover')
 def startover():
 	f = open("templates/wordcloud.html",'w')
-	f.write("")
-	f.close
-	f = open("static/wordcloud.css",'w')
 	f.write("")
 	f.close
 	return redirect(url_for('index'))
