@@ -1,13 +1,9 @@
 <html>
 	<head>
-		{% if title %}
-		<title>{{ title }}</title>
-		{% else %}
-		<title>WordCloud</title>
-		{% endif %}
+		<title>WordCloud | HTML</title>
 	</head>
+	
 	<body>
-		
 	<form name="main" action="" method="Post">
 		
 		<a href="/startover">Startover</a>
@@ -31,6 +27,7 @@
 		
 		<input type="submit" value="WordCloud">
 	</form>
+	
 	<hr>
 		
 		{% with messages = get_flashed_messages() %}
@@ -43,7 +40,7 @@
 		{% endif %}
 		{% endwith %}
 
-	{% include 'wordcloud.html' %}		
+		{% include 'wordcloud.html' %}		
 
 	</body>
 </html>
