@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   
 	<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
@@ -10,17 +9,11 @@
 </head>
 
 <body>
-
-   
-
-
     <nav class="navbar navbar-default" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                
                 <a class="navbar-brand" href="http://startbootstrap.com">WordTagCloud</a>
             </div>
-
             <div class="collapse navbar-collapse navbar-right navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="http://www.github.com/shivam5992/wordcloud/" target="_blank">Code</a>
@@ -31,14 +24,11 @@
             </div>
         </div>
     </nav>
-   
-     
        <div class="container">
             <h2><font color="#2a6496">WordTagCloud:</font> Create tag cloud from words</h2>
             <br>
             
-            <form name="main" action="/" method="Post">
-            
+            <form name="main" action="/" method="Post">        
             <table>
                 <tr>
                     <td>Enter URL:</td>
@@ -60,28 +50,21 @@
                 <tr><td>&nbsp;</td></tr>
                 <tr>
                     <td></td>
-                    <td><input type="submit" value="Create Word Tag Cloud"></td>
+                    <td><input type="submit" value="Create Word Tag Cloud"><img src="static/img/loader.gif"> </td>
             </table>
             </form>
-
-<hr>
-
-{% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+            <hr>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <font color="RED" size="30px">{{ message }}</font>
+                {% endfor %}
+            {% endif %}
         {% endwith %}
-
-        {% include 'wordcloud.html' %}      
-      
-    <br><br><br>
-   <h4>Created and Developed by <a href="http://www.shivambansal.com" target="_blank">Shivam Bansal</a></h2>
+        {% include 'wordcloud.html' %}        
+        <br><br><br>
+        <h4>Created and Developed by <a href="http://www.shivambansal.com" target="_blank">Shivam Bansal</a></h2>
    	 </div>
-
+     
 </body>
-
 </html>

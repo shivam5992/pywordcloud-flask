@@ -52,10 +52,12 @@ def index():
 			article += text.encode("utf-8")
 		article = str(article)
 		article = BeautifulSoup(article, convertEntities=BeautifulSoup.HTML_ENTITIES)
-		exclude = set(string.punctuation)
-		article = str(article)
-		article = ''.join(ch for ch in article if ch not in exclude)
-		article = article.replace("\n"," ")
+		
+		#exclude = set(string.punctuation)
+		#article = str(article)
+		#article = ''.join(ch for ch in article if ch not in exclude)
+		
+		article = str(article).replace("\n"," ")
 
 		''' Get top keywords '''
 		freq = 50
@@ -64,6 +66,7 @@ def index():
 		random.shuffle(a)
 		b = [x[1] for x in a]
 		minFreq = min(b)
+		maxFreq = max(b)
 
 		''' Create html span tags and corresponding css '''
 		span = ""
@@ -83,20 +86,22 @@ def index():
 				tag = str(item[0])
 
 			if show_freq == "yes":
-				span += '<a href=#><span class="word'+str(index)+'" id="tag'+str(index)+'">' + tag + " (" + str(item[1]) + ") " + "</span></a>\n"
+				span += '<a href=#><span class="word'+str(index)+'" id="tag'+str(index)+'">&nbsp;' + tag + " (" + str(item[1]) + ") " + "&nbsp;</span></a>\n"
 			else:
-				span += '<a href=#><span class="word'+str(index)+'" id="tag'+str(index)+'">' + tag + "</span></a>\n"	
+				span += '<a href=#><span class="word'+str(index)+'" id="tag'+str(index)+'">&nbsp;' + tag + "&nbsp;</span></a>\n"	
 			
-			''' Create different sizes'''
-			freqTag = item[1]
-			fontMax = 120
-			fontMin = 100
-			if freqTag == minFreq:
-				size = fontMin
-			else:
-				size = freqTag * (fontMax - fontMin) + fontMin
-	
-		 	css += '#tag'+str(index)+'{font-size: '+ str(size) +'%;color: '+colors[int(k%colsize)]+'}\n'
+			''' Algorithm to scale sizes'''
+			freqTag = int(item[1])
+			fontMax = 5.5
+			fontMin = 1.5
+			K = (freqTag - minFreq)/(maxFreq - minFreq)
+			frange = fontMax - fontMin
+			C = 4
+			
+			K = float(freqTag - minFreq)/(maxFreq - minFreq)
+			size = fontMin + (C*float(K*frange/C))
+
+			css += '#tag'+str(index)+'{font-size: '+ str(size) +'em;color: '+colors[int(k%colsize)]+'}\n'
 		 	css += '#tag'+str(index)+':hover{color: red}\n'
 		 	k += 1
 		
@@ -135,12 +140,11 @@ def getKeywords(articletext, case, freq):
 	filtered_words = [w for w in word_list if not w in stopwords.words('english')]
 
 	for word in filtered_words:
-		if word.isalnum():
+		if word.isalnum() and not word.isdigit() and not len(word) == 1:
 			if word not in word_dict:
 				word_dict[word] = 1
 			if word in word_dict:
 				word_dict[word] += 1
-
 
 	top_words =  sorted(word_dict.items(),key=lambda(k,v):(v,k),reverse=True)[0:freq]
 
