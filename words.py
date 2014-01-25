@@ -13,9 +13,9 @@ Version: 0.1
 
 from flask import Flask, render_template, request, flash, redirect, url_for
 from BeautifulSoup import BeautifulSoup
-from threading import Thread
 import urllib
-import random
+import random, re, string
+from nltk.corpus import stopwords
 
 app = Flask(__name__)
 app.secret_key = 'You will never guess'
@@ -31,7 +31,6 @@ def index():
 		
 		''' Store post variables '''
 		url = request.form['urllink']
-		#area = request.form['textarea']
 		case = request.form['case']
 		show_freq = request.form['show_freq']
 		
@@ -45,11 +44,19 @@ def index():
 			return redirect(url_for('startover'))	
 		
 		''' Get all text from the html repsonse ''' 
-		soup = BeautifulSoup(htmltext)
+		soup = BeautifulSoup(htmltext)		
+		texts = soup.findAll(text=True)
+		visible_texts = filter(visible, texts)
 		article = ""
-		for text in soup.findAll(text=True):
+		for text in visible_texts:
 			article += text.encode("utf-8")
-		
+		article = str(article)
+		article = BeautifulSoup(article, convertEntities=BeautifulSoup.HTML_ENTITIES)
+		exclude = set(string.punctuation)
+		article = str(article)
+		article = ''.join(ch for ch in article if ch not in exclude)
+		article = article.replace("\n"," ")
+
 		''' Get top keywords '''
 		freq = 50
 		a = getKeywords(article, case, freq)
@@ -70,7 +77,6 @@ def index():
 		k = 0
 		for index,item in enumerate(a):
 			index += 1
-			
 			if case == "upper":
 				tag = str(item[0]).upper()
 			else:
@@ -81,13 +87,10 @@ def index():
 			else:
 				span += '<a href=#><span class="word'+str(index)+'" id="tag'+str(index)+'">' + tag + "</span></a>\n"	
 			
-			''' Create Randomness in sizes'''
-			
+			''' Create different sizes'''
 			freqTag = item[1]
-
 			fontMax = 120
 			fontMin = 100
-
 			if freqTag == minFreq:
 				size = fontMin
 			else:
@@ -99,7 +102,6 @@ def index():
 		
 
 		''' Write the HTML and CSS into seperate files ''' 
-		
 
 		f = open('templates/wordcloud.html', 'w')
 		message = """
@@ -113,7 +115,6 @@ def index():
 		f.write(message)
 		f.close
 		f.flush()
-		
 		return render_template('index.html')
 
 	startover()
@@ -130,12 +131,17 @@ def getKeywords(articletext, case, freq):
 	''' Create the dictionary for output response '''
 	word_dict = {}
 	word_list = articletext.lower().split()
-	for word in word_list:
-		if word not in common and word.isalnum():
+	
+	filtered_words = [w for w in word_list if not w in stopwords.words('english')]
+
+	for word in filtered_words:
+		if word.isalnum():
 			if word not in word_dict:
 				word_dict[word] = 1
 			if word in word_dict:
 				word_dict[word] += 1
+
+
 	top_words =  sorted(word_dict.items(),key=lambda(k,v):(v,k),reverse=True)[0:freq]
 
 	'''  Return a list of dictionaies, dictionaies contains word and their frequencies '''	
@@ -143,13 +149,6 @@ def getKeywords(articletext, case, freq):
 	for w in top_words:
 		top.append(w)
 	return top
-
-'''
-Thread Function to write text in HTML and CSS files
-'''
-def write():
-	print "Do Nothing"
-
 
 '''
 Function to reset everthing and startover
@@ -160,6 +159,13 @@ def startover():
 	f.write("")
 	f.close
 	return redirect(url_for('index'))
+
+def visible(element):
+		    if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
+		        return False
+		    elif re.match('<!--.*-->', str(element)):
+		        return False
+		    return True
 
 '''
 Run the Flask Application
