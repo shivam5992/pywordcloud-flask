@@ -13,7 +13,7 @@ Version: 0.1
 
 from flask import Flask, render_template, request, flash, redirect, url_for
 from BeautifulSoup import BeautifulSoup
-from nltk.corpus import stopwords
+#from nltk.corpus import stopwords
 import urllib, random, re, string
 
 app = Flask(__name__)
@@ -136,8 +136,8 @@ def getKeywords(articletext, case, freq):
 	word_dict = {}
 	word_list = articletext.lower().split()
 	
-	filtered_words = [w for w in word_list if not w in stopwords.words('english')]
-
+	#filtered_words = [w for w in word_list if not w in stopwords.words('english')]
+	filtered_words = word_list
 	for word in filtered_words:
 		if word.isalnum() and not word.isdigit() and not len(word) == 1:
 			if word not in word_dict:
