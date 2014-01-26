@@ -13,9 +13,8 @@ Version: 0.1
 
 from flask import Flask, render_template, request, flash, redirect, url_for
 from BeautifulSoup import BeautifulSoup
-import urllib
-import random, re, string
 from nltk.corpus import stopwords
+import urllib, random, re, string
 
 app = Flask(__name__)
 app.secret_key = 'You will never guess'
