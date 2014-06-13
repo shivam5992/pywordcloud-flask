@@ -3,6 +3,10 @@ WordTagCloud
 
 WordTagCloud creates a word cloud by collecting the words having most frequency from a webpage. The words are refined and processed before producing the output. The words with maximum frequency are shown in bigger font size as compared to those having less frequency. 
 
+Improved Version: PyWordCloud Python Package:
+
+(https://github.com/shivam5992/pywordcloud)
+
 ###Algorithm to calculate font size based on frequency
 
 ```python
